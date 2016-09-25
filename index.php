@@ -185,7 +185,7 @@ class Holiday
     {
         foreach (self::$Holidays as $holiday){
             if (CUR_DAY == $holiday) {
-                $text    = "Сегодня выходнойeqw 🍻";
+                $text    = "Сегодня выходной 🍻";
                 $request = new Message();
                 $request->sendMessage($text, Keyboards::$selectDay);
                 exit();
