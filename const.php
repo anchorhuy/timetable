@@ -1,7 +1,7 @@
 <?php
 
 //текущая дата
-define("CUR_DATE", date("U") - 3 * 60 * 60);
+define("CUR_DATE", date("U") + 3 * 60 * 60);
 
 
 //текущее время
