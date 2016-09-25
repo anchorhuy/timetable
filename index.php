@@ -34,7 +34,7 @@ define('API_URL', 'https://api.telegram.org/bot' . '255704702:AAGm_IG22M0tBeWp8J
 
 //database
 const DB_HOST     = 'server27.hosting.reg.ru';
-const DB_NAME   = 'u0167959_timetable';
+const DB_NAME     = 'u0167959_timetable';
 const DB_USER     = 'u0167959_status';
 const DB_PASSWORD = 'Pasha635';
 
@@ -357,25 +357,15 @@ class Update
 
 class Database
 {
-    private $host;
-    private $dbname;
-    private $user;
-    private $password;
-
-    public  $pdo;
-    public $timetable;
+    private $pdo;
 
     public static $sqlCurDay =
                            "SELECT cab, open, close, time, subject
                             FROM " . CUR_DAY . "
-                            INNER JOIN subjects
-                            ON name = subject_id
-                    
-                            INNER JOIN time
-                            ON time = id
-                    
-                            INNER JOIN cabs
-                            ON cabinet = cab_id
+                            
+                            INNER JOIN subjects ON name = subject_id
+                            INNER JOIN time ON time = id
+                            INNER JOIN cabs ON cabinet = cab_id
                     
                             WHERE week = " . CUR_WEEK. "
                             
@@ -385,14 +375,10 @@ class Database
     public static $sqlDay =
                            "SELECT cab, open, close, week, time, subject
                             FROM " . DAY_ENG . " 
-                            INNER JOIN subjects
-                            ON name = subject_id
-                    
-                            INNER JOIN time
-                            ON time = id
-                    
-                            INNER JOIN cabs
-                            ON cabinet = cab_id
+                            
+                            INNER JOIN subjects ON name = subject_id
+                            INNER JOIN time ON time = id
+                            INNER JOIN cabs ON cabinet = cab_id
                             
                             ORDER BY time ASC
                             ";
@@ -400,39 +386,21 @@ class Database
     public static $sqlTomorrow =
                            "SELECT cab, open, close, time, subject
                             FROM " . TOMORROW . " 
-                            INNER JOIN subjects
-                            ON name = subject_id
-                    
-                            INNER JOIN time
-                            ON time = id
-                    
-                            INNER JOIN cabs
-                            ON cabinet = cab_id
+                            
+                            INNER JOIN subjects ON name = subject_id
+                            INNER JOIN time ON time = id
+                            INNER JOIN cabs ON cabinet = cab_id
+                            
+                            WHERE week = " . CUR_WEEK. "
                             
                             ORDER BY time ASC
                             ";
 
-    public function __construct($host, $dbname, $user, $password)
+    public function __construct()
     {
-        $this->host     = $host;
-        $this->dbname   = $dbname;
-        $this->user     = $user;
-        $this->password = $password;
-
-        $this->connect();
-    }
-
-
-    private function connect()
-    {
-        $host       = $this->host;
-        $dbname     = $this->dbname;
-        $user       = $this->user;
-        $password   = $this->password;
-
         try
         {
-            $pdo = new PDO("mysql:host=$host;dbname=$dbname", "$user", "$password");
+            $pdo = new PDO("mysql:host=" . DB_HOST . ";dbname=". DB_NAME, DB_USER, DB_PASSWORD);
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $pdo->exec('SET NAMES "utf8"');
         }
@@ -441,12 +409,8 @@ class Database
             echo 'Ошибка!' . $e->getMessage();
             exit();
         }
-
         $this->pdo = $pdo;
     }
-
-
-
 
     public function select($sql, array $values = null){
 
@@ -628,7 +592,7 @@ if ($update->text == "Сейчас")
 {
     Holiday::check("Сегодня");
 
-    $database = new Database(DB_HOST, DB_NAME, DB_USER, DB_PASSWORD);
+    $database = new Database();
 
     $select  = $database->select(Database::$sqlCurDay);
     $text    = Timetable::getNowPair($select);
@@ -644,7 +608,7 @@ if ($update->text == "Сегодня")
 {
     Holiday::check("Сегодня");
 
-    $database = new Database(DB_HOST, DB_NAME, DB_USER, DB_PASSWORD);
+    $database = new Database();
 
     $select  = $database->select(Database::$sqlCurDay);
     $text    = Timetable::getTodayPair($select);
@@ -660,7 +624,7 @@ if ($update->text == "Завтра")
 {
     Holiday::check("Завтра");
 
-    $database = new Database(DB_HOST, DB_NAME, DB_USER, DB_PASSWORD);
+    $database = new Database();
 
     $select = $database->select(Database::$sqlTomorrow);
     $text = Timetable::getTomorrowPair($select);
@@ -674,7 +638,7 @@ if ($update->text == "Завтра")
 
 if (defined('DAY_ENG')) {
 
-    $database = new Database(DB_HOST, DB_NAME, DB_USER, DB_PASSWORD);
+    $database = new Database();
 
     $select  = $database->select(Database::$sqlDay);
     $text    = Timetable::getDayPair($select);
