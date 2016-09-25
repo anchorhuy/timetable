@@ -631,7 +631,7 @@ if ($update->text == "Завтра") {
     exit();
 }
 
-switch ($update->text and isset($update->text)){
+switch ($update->text){
     case "Пн":
         define("DAY_ENG", 'monday');
         define("DAY_RUS", 'понедельник');
