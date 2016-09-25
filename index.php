@@ -121,22 +121,22 @@ class Timetable
 
     private function createTimetableDay(){
 
-        $text = "Расписание на " . DAY_RUS . ":\n\r\n\r";
+        $text = "Расписание на " . DAY_RUS . ":\n\r";
 
         for ($i = 1; $i <= 2; $i++)
         {
             if (CUR_WEEK == $i) {
-                $text .= self::$numbers[$i-1] . "✅\n\r\n\r";
+                $text .= "\n\r" . self::$numbers[$i-1] . "✅\n\r\n\r";
             }
             else {
-                $text .= self::$numbers[$i-1] . "\n\r\n\r";
+                $text .= "\n\r" . self::$numbers[$i-1] . "\n\r\n\r";
             }
 
             foreach (self::$timetable as $row) {
                 if ($row["week"] == $i){
                     $text .= "<b>" . $row["subject"] . "</b>" . "\n\r";
                     $text .= "🕒 " . $row['open'] . " - " . $row['close'] . "\n\r";
-                    $text .= "🏤 " . $row['cab']  . "\n\r\n\r\n\r";
+                    $text .= "🏤 " . $row['cab']  . "\n\r\n\r";
                 }
             }
         }
