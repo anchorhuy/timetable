@@ -17,8 +17,11 @@ else $cur_week = 1;
 define("CUR_WEEK", $cur_week);
 
 
-//день недели
+//сегодня
 define("CUR_DAY", strtolower( date("l", CUR_DATE)));
+
+//завтра
+define("TOMORROW", strtolower( date("l", CUR_DATE + 24 *60 * 60)));
 
 
 //URL сайта
@@ -45,6 +48,15 @@ class Timetable
     ];
     private static $numbers = ['1⃣','2⃣'];
 
+
+    public static function getTomorrowPair($select)
+    {
+        self::getTimetableToArray($select);
+
+        $text = self::createTimetableTomorrow();
+
+        return $text;
+    }
 
     public static function getTodayPair($select)
     {
@@ -119,6 +131,20 @@ class Timetable
     private function createTimetableToday(){
 
         $text = "<i>Расписание на сегодня:</i>\n\r\n\r";
+
+        foreach (self::$timetable as $row)
+        {
+            $text .= "<b>" . $row["subject"] . "</b>" . "\n\r";
+            $text .= "🕒 " . $row['open'] . " - " . $row['close'] . "\n\r";
+            $text .= "🏤 " . $row['cab']  . "\n\r\n\r";
+        }
+
+        return $text;
+    }
+
+    private function createTimetableTomorrow(){
+
+        $text = "<i>Расписание на завтра:</i>\n\r\n\r";
 
         foreach (self::$timetable as $row)
         {
@@ -360,6 +386,21 @@ class Database
                             ORDER BY time ASC
                             ";
 
+    public static $sqlTomorrow =
+                           "SELECT cab, open, close, time, subject
+                            FROM " . TOMORROW . " 
+                            INNER JOIN subjects
+                            ON name = subject_id
+                    
+                            INNER JOIN time
+                            ON time = id
+                    
+                            INNER JOIN cabs
+                            ON cabinet = cab_id
+                            
+                            ORDER BY time ASC
+                            ";
+
     public function __construct($host, $dbname, $user, $password)
     {
         $this->host     = $host;
@@ -566,8 +607,22 @@ if ($update->text == "Сегодня") {
     exit();
 }
 
+if ($update->text == "Завтра") {
 
-switch ($update->text){
+    Holiday::check();
+
+    $database = new Database(DB_HOST, DB_NAME, DB_USER, DB_PASSWORD);
+
+    $select = $database->select(Database::$sqlTomorrow);
+    $text = Timetable::getTomorrowPair($select);
+
+    $request = new Message();
+    $request->sendMessage($text, Keyboards::$selectDay);
+
+    exit();
+}
+
+switch ($update->text and isset($update->text)){
     case "Пн":
         define("DAY_ENG", 'monday');
         define("DAY_RUS", 'понедельник');
@@ -613,5 +668,3 @@ $request = new Message();
 $request->sendMessage($text, Keyboards::$selectDay);
 
 exit();
-
-
