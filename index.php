@@ -247,6 +247,7 @@ class Holiday
         switch ($when) {
             case "Сегодня":
                 $day = CUR_DAY;
+                break;
             case "Завтра":
                 $day = TOMORROW;
         }
