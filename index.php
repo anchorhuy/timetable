@@ -253,14 +253,12 @@ class Holiday
                 break;
         }
 
-        if ($when == "Сегодня") {
-            foreach (self::$holidays as $holiday) {
-                if ($day == $holiday) {
-                    $text = $when ." выходной 🍻";
-                    $request = new Message();
-                    $request->sendMessage($text, Keyboards::$selectDay);
-                    exit();
-                }
+        foreach (self::$holidays as $holiday) {
+            if ($day == $holiday) {
+                $text = $when ." выходной 🍻";
+                $request = new Message();
+                $request->sendMessage($text, Keyboards::$selectDay);
+                exit();
             }
         }
     }
