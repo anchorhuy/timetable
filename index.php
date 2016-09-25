@@ -572,67 +572,6 @@ class Message
 
 $update = new Update();
 
-if ($update->text == "/start") {
-    $request = new Message();
-    $text = "Привет, на какой срок показать расписание?";
-    $request->sendMessage($text, Keyboards::$selectDay);
-
-    exit();
-}
-
-if ($update->text == "/chatid") {
-    $request = new Message();
-    $text = CHAT_ID;
-    $request->sendMessage($text, Keyboards::$selectDay);
-
-    exit();
-}
-
-if ($update->text == "Сейчас") {
-
-    Holiday::check("Сегодня");
-
-    $database = new Database(DB_HOST, DB_NAME, DB_USER, DB_PASSWORD);
-
-    $select  = $database->select(Database::$sqlCurDay);
-    $text    = Timetable::getNowPair($select);
-
-    $request = new Message();
-    $request->sendMessage($text, Keyboards::$selectDay);
-
-    exit();
-}
-
-if ($update->text == "Сегодня") {
-
-    Holiday::check($update->text);
-
-    $database = new Database(DB_HOST, DB_NAME, DB_USER, DB_PASSWORD);
-
-    $select  = $database->select(Database::$sqlCurDay);
-    $text    = Timetable::getTodayPair($select);
-
-    $request = new Message();
-    $request->sendMessage($text, Keyboards::$selectDay);
-
-    exit();
-}
-
-if ($update->text == "Завтра") {
-
-    Holiday::check($update->text);
-
-    $database = new Database(DB_HOST, DB_NAME, DB_USER, DB_PASSWORD);
-
-    $select = $database->select(Database::$sqlTomorrow);
-    $text = Timetable::getTomorrowPair($select);
-
-    $request = new Message();
-    $request->sendMessage($text, Keyboards::$selectDay);
-
-    exit();
-}
-
 switch ($update->text){
     case "Пн":
         define("DAY_ENG", 'monday');
@@ -663,19 +602,90 @@ switch ($update->text){
         define("DAY_ENG", 'saturday');
         define("DAY_RUS", 'субботу');
         break;
-
-    default:
-        $text    = "Я тебя не понимаю 😥";
-        $request = new Message();
-        $request->sendMessage($text, Keyboards::$selectDay);
 }
 
-$database = new Database(DB_HOST, DB_NAME, DB_USER, DB_PASSWORD);
+if ($update->text == "/start")
+{
+    $request = new Message();
+    $text = "Привет, на какой срок показать расписание?";
+    $request->sendMessage($text, Keyboards::$selectDay);
 
-$select  = $database->select(Database::$sqlDay);
-$text    = Timetable::getDayPair($select);
+    exit();
+}
 
+
+if ($update->text == "/chatid")
+{
+    $request = new Message();
+    $text = CHAT_ID;
+    $request->sendMessage($text, Keyboards::$selectDay);
+
+    exit();
+}
+
+
+if ($update->text == "Сейчас")
+{
+    Holiday::check("Сегодня");
+
+    $database = new Database(DB_HOST, DB_NAME, DB_USER, DB_PASSWORD);
+
+    $select  = $database->select(Database::$sqlCurDay);
+    $text    = Timetable::getNowPair($select);
+
+    $request = new Message();
+    $request->sendMessage($text, Keyboards::$selectDay);
+
+    exit();
+}
+
+
+if ($update->text == "Сегодня")
+{
+    Holiday::check("Сегодня");
+
+    $database = new Database(DB_HOST, DB_NAME, DB_USER, DB_PASSWORD);
+
+    $select  = $database->select(Database::$sqlCurDay);
+    $text    = Timetable::getTodayPair($select);
+
+    $request = new Message();
+    $request->sendMessage($text, Keyboards::$selectDay);
+
+    exit();
+}
+
+
+if ($update->text == "Завтра")
+{
+    Holiday::check("Завтра");
+
+    $database = new Database(DB_HOST, DB_NAME, DB_USER, DB_PASSWORD);
+
+    $select = $database->select(Database::$sqlTomorrow);
+    $text = Timetable::getTomorrowPair($select);
+
+    $request = new Message();
+    $request->sendMessage($text, Keyboards::$selectDay);
+
+    exit();
+}
+
+
+if (empty(DAY_ENG)) {
+
+    $database = new Database(DB_HOST, DB_NAME, DB_USER, DB_PASSWORD);
+
+    $select  = $database->select(Database::$sqlDay);
+    $text    = Timetable::getDayPair($select);
+
+    $request = new Message();
+    $request->sendMessage($text, Keyboards::$selectDay);
+
+    exit();
+}
+
+
+$text    = "Я тебя не понимаю 😥";
 $request = new Message();
 $request->sendMessage($text, Keyboards::$selectDay);
-
-exit();
