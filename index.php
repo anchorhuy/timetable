@@ -242,14 +242,23 @@ class Holiday
 {
     public static $Holidays = ['monday', 'sunday'];
 
-    public static function check()
+    public static function check($when)
     {
-        foreach (self::$Holidays as $holiday){
-            if (CUR_DAY == $holiday) {
-                $text    = "Сегодня выходной 🍻";
-                $request = new Message();
-                $request->sendMessage($text, Keyboards::$selectDay);
-                exit();
+        switch ($when) {
+            case "Сегодня":
+                $day = CUR_DAY;
+            case "Завтра":
+                $day = TOMORROW;
+        }
+
+        if ($when == "Сегодня") {
+            foreach (self::$Holidays as $holiday) {
+                if ($day == $holiday) {
+                    $text = $when ." выходной 🍻";
+                    $request = new Message();
+                    $request->sendMessage($text, Keyboards::$selectDay);
+                    exit();
+                }
             }
         }
     }
@@ -579,7 +588,7 @@ if ($update->text == "/chatid") {
 
 if ($update->text == "Сейчас") {
 
-    Holiday::check();
+    Holiday::check("Сегодня");
 
     $database = new Database(DB_HOST, DB_NAME, DB_USER, DB_PASSWORD);
 
@@ -594,7 +603,7 @@ if ($update->text == "Сейчас") {
 
 if ($update->text == "Сегодня") {
 
-    Holiday::check();
+    Holiday::check($update->text);
 
     $database = new Database(DB_HOST, DB_NAME, DB_USER, DB_PASSWORD);
 
@@ -609,7 +618,7 @@ if ($update->text == "Сегодня") {
 
 if ($update->text == "Завтра") {
 
-    Holiday::check();
+    Holiday::check($update->text);
 
     $database = new Database(DB_HOST, DB_NAME, DB_USER, DB_PASSWORD);
 
