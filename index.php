@@ -43,6 +43,7 @@ class Timetable
         ["<b>Сейчас идет</b>:\n\r\n\r", "<b>Следующая пара</b>:\n\r\n\r"],
         ["До конца ", "До начала "]
     ];
+    private static $numbers = ['1⃣','2⃣'];
 
 
     public static function getTodayPair($select)
@@ -136,10 +137,10 @@ class Timetable
         for ($i = 1; $i <= 2; $i++)
         {
             if (CUR_WEEK == $i) {
-                $text .= " 1⃣✅ \n\r";
+                $text .= self::$numbers[$i-1] . "✅\n\r";
             }
             else {
-                $text .= " 1⃣\n\r";
+                $text .= self::$numbers[$i-1] . "✅\n\r";
             }
 
             foreach (self::$timetable as $row) {
@@ -345,7 +346,7 @@ class Database
                             ";
 
     public static $sqlDay =
-                           "SELECT cab, open, close, time, subject
+                           "SELECT cab, open, close, week, time, subject
                             FROM " . DAY_ENG . " 
                             INNER JOIN subjects
                             ON name = subject_id
