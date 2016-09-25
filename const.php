@@ -9,7 +9,7 @@ define("CUR_TIME", date ('H:i', CUR_DATE));
 
 
 //четная или нечетная неделя
-if((strftime("%V") % 2) == 0) $cur_week = 2;
+if(date("W", CUR_DATE) % 2 == 0) $cur_week = 2;
 else $cur_week = 1;
 
 define("CUR_WEEK", $cur_week);

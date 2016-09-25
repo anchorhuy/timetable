@@ -3,7 +3,6 @@
 require ("classes.php");
 require ("const.php");
 
-
 $update = new Update();
 
 switch ($update->text){
@@ -58,7 +57,7 @@ if ($update->text == "/time")
 }
 
 
-if ($update->text == "/weekk")
+if ($update->text == "/week")
 {
     $request = new Message();
     $text = CUR_WEEK;
