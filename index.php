@@ -184,7 +184,7 @@ class Holiday
     public static function check()
     {
         foreach (self::$Holidays as $holiday){
-            if (DAY == $holiday) {
+            if (CUR_DAY == $holiday) {
                 $text    = "Сегодня выхххходной 🍻";
                 $request = new Message();
                 $request->sendMessage($text, Keyboards::$selectDay);
@@ -480,7 +480,7 @@ if ($update->text == "/start") {
 
 if ($update->text == "/chatid") {
     $request = new Message();
-    $text = CHAT_ID;
+    $text = CUR_WEEK;
     $request->sendMessage($text, Keyboards::$selectDay);
 
     exit();
