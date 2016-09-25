@@ -492,7 +492,7 @@ class Message
         }
 
         if (!isset($this->resize_keyboard)) {
-            $this->resize_keyboard = true;
+            $this->resize_keyboard = false;
         }
     }
 
@@ -663,7 +663,7 @@ switch ($update->text){
         break;
 
     default:
-        $text    = "Неизвестная команда";
+        $text    = "Я тебя не понимаю 😥";
         $request = new Message();
         $request->sendMessage($text, Keyboards::$selectDay);
 }
