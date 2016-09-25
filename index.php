@@ -672,7 +672,7 @@ if ($update->text == "Завтра")
 }
 
 
-if (defined(DAY_ENG)) {
+if (defined('DAY_ENG')) {
 
     $database = new Database(DB_HOST, DB_NAME, DB_USER, DB_PASSWORD);
 
