@@ -140,7 +140,7 @@ class Timetable
                 $text .= self::$numbers[$i-1] . "✅\n\r";
             }
             else {
-                $text .= self::$numbers[$i-1] . "✅\n\r";
+                $text .= self::$numbers[$i-1] . "\n\r";
             }
 
             foreach (self::$timetable as $row) {
