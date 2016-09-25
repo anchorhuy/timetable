@@ -90,6 +90,60 @@ class Timetable
         return $text;
     }
 
+
+    private function createTimetableTomorrow(){
+
+        $text = "<i>Расписание на завтра:</i>\n\r\n\r";
+
+        foreach (self::$timetable as $row)
+        {
+            $text .= "<b>" . $row["subject"] . "</b>" . "\n\r";
+            $text .= "🕒 " . $row['open'] . " - " . $row['close'] . "\n\r";
+            $text .= "🏤 " . $row['cab']  . "\n\r\n\r";
+        }
+
+        return $text;
+    }
+
+    private function createTimetableToday(){
+
+        $text = "<i>Расписание на сегодня:</i>\n\r\n\r";
+
+        foreach (self::$timetable as $row)
+        {
+            $text .= "<b>" . $row["subject"] . "</b>" . "\n\r";
+            $text .= "🕒 " . $row['open'] . " - " . $row['close'] . "\n\r";
+            $text .= "🏤 " . $row['cab']  . "\n\r\n\r";
+        }
+
+        return $text;
+    }
+
+    private function createTimetableDay(){
+
+        $text = "Расписание на " . DAY_RUS . ":\n\r\n\r";
+
+        for ($i = 1; $i <= 2; $i++)
+        {
+            if (CUR_WEEK == $i) {
+                $text .= self::$numbers[$i-1] . "✅\n\r\n\r";
+            }
+            else {
+                $text .= self::$numbers[$i-1] . "\n\r\n\r";
+            }
+
+            foreach (self::$timetable as $row) {
+                if ($row["week"] == $i){
+                    $text .= "<b>" . $row["subject"] . "</b>" . "\n\r";
+                    $text .= "🕒 " . $row['open'] . " - " . $row['close'] . "\n\r";
+                    $text .= "🏤 " . $row['cab']  . "\n\r\n\r\n\r";
+                }
+            }
+        }
+
+        return $text;
+    }
+
     private function createTimetableNow(){
 
         // Сколько до начала и конца пар
@@ -128,58 +182,6 @@ class Timetable
         return $text;
     }
 
-    private function createTimetableToday(){
-
-        $text = "<i>Расписание на сегодня:</i>\n\r\n\r";
-
-        foreach (self::$timetable as $row)
-        {
-            $text .= "<b>" . $row["subject"] . "</b>" . "\n\r";
-            $text .= "🕒 " . $row['open'] . " - " . $row['close'] . "\n\r";
-            $text .= "🏤 " . $row['cab']  . "\n\r\n\r";
-        }
-
-        return $text;
-    }
-
-    private function createTimetableTomorrow(){
-
-        $text = "<i>Расписание на завтра:</i>\n\r\n\r";
-
-        foreach (self::$timetable as $row)
-        {
-            $text .= "<b>" . $row["subject"] . "</b>" . "\n\r";
-            $text .= "🕒 " . $row['open'] . " - " . $row['close'] . "\n\r";
-            $text .= "🏤 " . $row['cab']  . "\n\r\n\r";
-        }
-
-        return $text;
-    }
-
-    private function createTimetableDay(){
-
-        $text = "Расписание на " . DAY_RUS . ":\n\r\n\r";
-
-        for ($i = 1; $i <= 2; $i++)
-        {
-            if (CUR_WEEK == $i) {
-                $text .= self::$numbers[$i-1] . "✅\n\r";
-            }
-            else {
-                $text .= self::$numbers[$i-1] . "\n\r";
-            }
-
-            foreach (self::$timetable as $row) {
-                if ($row["week"] == $i){
-                    $text .= "<b>" . $row["subject"] . "</b>" . "\n\r";
-                    $text .= "🕒 " . $row['open'] . " - " . $row['close'] . "\n\r";
-                    $text .= "🏤 " . $row['cab']  . "\n\r\n\r";
-                }
-            }
-        }
-
-        return $text;
-    }
 
     private function removeLastPair(){
         for ( $i = 0; $i <= count(self::$timetable); $i++ )
