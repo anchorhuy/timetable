@@ -48,6 +48,26 @@ if ($update->text == "/start")
 }
 
 
+if ($update->text == "/time")
+{
+    $request = new Message();
+    $text = CUR_TIME;
+    $request->sendMessage($text, Keyboards::$selectDay);
+
+    exit();
+}
+
+
+if ($update->text == "/week")
+{
+    $request = new Message();
+    $text = CUR_WEEK;
+    $request->sendMessage($text, Keyboards::$selectDay);
+
+    exit();
+}
+
+
 if ($update->text == "/chatid")
 {
     $request = new Message();
