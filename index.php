@@ -240,7 +240,7 @@ class Timetable
 
 class Holiday
 {
-    public static $Holidays = ['monday', 'sunday'];
+    public static $holidays = ['monday', 'sunday'];
 
     public static function check($when)
     {
@@ -250,10 +250,11 @@ class Holiday
                 break;
             case "Завтра":
                 $day = TOMORROW;
+                break;
         }
 
         if ($when == "Сегодня") {
-            foreach (self::$Holidays as $holiday) {
+            foreach (self::$holidays as $holiday) {
                 if ($day == $holiday) {
                     $text = $when ." выходной 🍻";
                     $request = new Message();
