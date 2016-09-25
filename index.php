@@ -58,7 +58,7 @@ if ($update->text == "/time")
 }
 
 
-if ($update->text == "/week")
+if ($update->text == "/weekk")
 {
     $request = new Message();
     $text = CUR_WEEK;
