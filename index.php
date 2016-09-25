@@ -45,16 +45,25 @@ class Timetable
     ];
 
 
-    public static function getToday($select)
+    public static function getTodayPair($select)
     {
         self::getTimetableToArray($select);
 
         $text = self::createTimetableToday();
 
-        return$text;
+        return $text;
     }
 
-    public static function getNow($select)
+    public static function getDayPair($select)
+    {
+        self::getTimetableToArray($select);
+
+        $text = self::createTimetableDay();
+
+        return $text;
+    }
+
+    public static function getNowPair($select)
     {
         self::getTimetableToArray($select);
         self::removeLastPair();
@@ -115,6 +124,31 @@ class Timetable
             $text .= "<b>" . $row["subject"] . "</b>" . "\n\r";
             $text .= "🕒 " . $row['open'] . " - " . $row['close'] . "\n\r";
             $text .= "🏤 " . $row['cab']  . "\n\r\n\r";
+        }
+
+        return $text;
+    }
+
+    private function createTimetableDay(){
+
+        $text = "Расписание на " . DAY_RUS . ":\n\r\n\r";
+
+        for ($i = 1; $i <= 2; $i++)
+        {
+            if (CUR_WEEK == $i) {
+                $text .= " 1⃣✅ \n\r";
+            }
+            else {
+                $text .= " 1⃣\n\r";
+            }
+
+            foreach (self::$timetable as $row) {
+                if ($row["week"] == $i){
+                    $text .= "<b>" . $row["subject"] . "</b>" . "\n\r";
+                    $text .= "🕒 " . $row['open'] . " - " . $row['close'] . "\n\r";
+                    $text .= "🏤 " . $row['cab']  . "\n\r\n\r";
+                }
+            }
         }
 
         return $text;
@@ -185,7 +219,7 @@ class Holiday
     {
         foreach (self::$Holidays as $holiday){
             if (CUR_DAY == $holiday) {
-                $text    = "Сегодня выходfaной 🍻";
+                $text    = "Сегодня выходной 🍻";
                 $request = new Message();
                 $request->sendMessage($text, Keyboards::$selectDay);
                 exit();
@@ -294,7 +328,7 @@ class Database
     public $timetable;
 
     public static $sqlCurDay =
-        "SELECT cab, open, close, time, subject
+                           "SELECT cab, open, close, time, subject
                             FROM " . CUR_DAY . "
                             INNER JOIN subjects
                             ON name = subject_id
@@ -306,6 +340,21 @@ class Database
                             ON cabinet = cab_id
                     
                             WHERE week = " . CUR_WEEK. "
+                            
+                            ORDER BY time ASC
+                            ";
+
+    public static $sqlDay =
+                           "SELECT cab, open, close, time, subject
+                            FROM " . DAY_ENG . " 
+                            INNER JOIN subjects
+                            ON name = subject_id
+                    
+                            INNER JOIN time
+                            ON time = id
+                    
+                            INNER JOIN cabs
+                            ON cabinet = cab_id
                             
                             ORDER BY time ASC
                             ";
@@ -493,7 +542,7 @@ if ($update->text == "Сейчас") {
     $database = new Database(DB_HOST, DB_NAME, DB_USER, DB_PASSWORD);
 
     $select  = $database->select(Database::$sqlCurDay);
-    $text    = Timetable::getNow($select);
+    $text    = Timetable::getNowPair($select);
 
     $request = new Message();
     $request->sendMessage($text, Keyboards::$selectDay);
@@ -508,12 +557,60 @@ if ($update->text == "Сегодня") {
     $database = new Database(DB_HOST, DB_NAME, DB_USER, DB_PASSWORD);
 
     $select  = $database->select(Database::$sqlCurDay);
-    $text    = Timetable::getToday($select);
+    $text    = Timetable::getTodayPair($select);
 
     $request = new Message();
     $request->sendMessage($text, Keyboards::$selectDay);
 
     exit();
 }
+
+
+switch ($update->text){
+    case "Пн":
+        define("DAY_ENG", 'monday');
+        define("DAY_RUS", 'понедельник');
+        break;
+
+    case "Вт":
+        define("DAY_ENG", 'tuesday');
+        define("DAY_RUS", 'вторник');
+        break;
+
+    case "Ср":
+        define("DAY_ENG", 'wednesday');
+        define("DAY_RUS", 'среду');
+        break;
+
+    case "Чт":
+        define("DAY_ENG", 'thursday');
+        define("DAY_RUS", 'четверг');
+        break;
+
+    case "Пт":
+        define("DAY_ENG", 'friday');
+        define("DAY_RUS", 'пятницу');
+        break;
+
+    case "Сб":
+        define("DAY_ENG", 'saturday');
+        define("DAY_RUS", 'субботу');
+        break;
+
+    default:
+        $text    = "Неизвестная команда";
+        $request = new Message();
+        $request->sendMessage($text, Keyboards::$selectDay);
+}
+
+$database = new Database(DB_HOST, DB_NAME, DB_USER, DB_PASSWORD);
+
+$select  = $database->select(Database::$sqlDay);
+$text    = Timetable::getDayPair($select);
+
+$request = new Message();
+$request->sendMessage($text, Keyboards::$selectDay);
+
+exit();
 
 
